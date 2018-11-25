@@ -4,62 +4,18 @@
 #include "window.h"
 #include <string> 
 
-
 int value=0;
-
-main_menu::main_menu()
-:box(Gtk::ORIENTATION_VERTICAL),
-customer("Customer"),
-guest("Guest"),
-admin("Admin")
-{
-   set_size_request(350,200);
-set_title("MAIN MENU");
-add(box);
-
-
-customer.signal_clicked().connect(sigc::mem_fun(*this,&main_menu::Customer));
-		box.pack_start(customer);
-
-guest.signal_clicked().connect(sigc::mem_fun(*this,&main_menu::Guest));
-		box.pack_start(guest);
-
-admin.signal_clicked().connect(sigc::mem_fun(*this,&main_menu::Admin));
-		box.pack_start(admin);
-
-
-show_all_children();
-}
-
-main_menu::~main_menu()
-{
-
-}
-
-void main_menu:: Customer()
-{
-main_win newwin;
-hide();
-Gtk::Main::run(newwin);
-hide();
-}
-
-void main_menu:: Guest()
-{
-	
-}
-void main_menu:: Admin()
-{
-	
-}
+//std::vector <event> event_list;
 
 main_win::main_win()
 :box(Gtk::ORIENTATION_VERTICAL),
 new_event("New Event"),
 edit_event("Edit Event"),
-back("Back")
+delete_event("Delete Event"),
+sort_events("Sort Events")
 {
-   set_size_request(350,200);
+
+set_size_request(350,200);
 set_title("Event Planner");
 add(box);
 
@@ -70,24 +26,19 @@ new_event.signal_clicked().connect(sigc::mem_fun(*this,&main_win::New_event));
 		box.pack_start(new_event);
 
 edit_event.signal_clicked().connect(sigc::mem_fun(*this,&main_win::Edit_event));
-		box.pack_start(edit_event); 
+		box.pack_start(edit_event);
 
-back.signal_clicked().connect(sigc::mem_fun(*this,&main_win::Back));
-		box.pack_start(back);
+delete_event.signal_clicked().connect(sigc::mem_fun(*this,&main_win::Delete_event));
+		box.pack_start(delete_event);
 
-        show_all_children();
+sort_events.signal_clicked().connect(sigc::mem_fun(*this,&main_win::Sort_events));
+		box.pack_start(sort_events);
+
+show_all_children();
 }
 
 main_win:: ~main_win()
 {}
-
-void main_win:: Back()
-{
-main_menu newwin;
-hide();
-Gtk::Main::run(newwin);
-hide();
-}
 
 void main_win::New_event()
 {
@@ -98,7 +49,17 @@ Gtk::Main::run(type);
 hide();
 }
 
+void main_win::Delete_event()
+{
+
+}
+
 void main_win::Edit_event()
+{
+
+}
+
+void main_win::Sort_events()
 {
 
 }
@@ -266,7 +227,7 @@ dialog.set_secondary_text(di_final);
 dialog.run();
 close();
 //std::cout<<event_theme<<std::endl;
-//entries.push_back(event_theme);
+entries.push_back(event_theme);
 }
 
 void Wedding::pick_theme2()
@@ -548,3 +509,7 @@ void new_eventt::clicked()
 {
 	close();
 }
+
+
+
+

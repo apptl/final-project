@@ -5,7 +5,7 @@
 int main(int argc,char* argv[])
 {
 Gtk::Main app(argc,argv);
-main_win w;
+main_menu w;
 Gtk::Main::run(w);
 
 return 0;

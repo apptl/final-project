@@ -9,11 +9,10 @@
 
 using namespace std;
 
-
 class event
 {
 public:
-
+string person_name;
 string registary;
 string event_theme;
 double cost;
@@ -26,17 +25,33 @@ string date;
 };
 
 
+class main_menu:public Gtk::Window
+{
+public:
+Gtk::Box box;
+Gtk::Button guest,admin,customer;
+Gtk::Label title;
+
+void Customer();
+void Guest();
+void Admin();
+
+
+main_menu();
+virtual ~main_menu();
+
+};
+
 class main_win:public Gtk::Window
 {
 public:
 Gtk::Box box;
-Gtk::Button new_event,edit_event,sort_events,delete_event;
+Gtk::Button new_event,edit_event,back;
 Gtk::Label title;
 
 void New_event();
 void Edit_event();
-void Delete_event();
-void Sort_events();
+void Back();
 
 main_win();
 virtual ~main_win();
@@ -107,7 +122,14 @@ Gtk::Box textbox;
 
 };
 
-class Wedding : public event, public Gtk::Window
+class eventlist
+{
+public:
+std::vector <event> entries;
+};
+
+
+class Wedding : public event,public eventlist, public Gtk::Window
 {
 public:
 
@@ -124,7 +146,7 @@ void pick_theme3();
 
 };
 
-class Birthday: public event, public Gtk::Window
+class Birthday: public event,public eventlist,public Gtk::Window
 {
 public:
 Birthday();
@@ -139,7 +161,7 @@ void pick_theme2();
 void pick_theme3();
 };
 
-class Anniversary : public event,public Gtk::Window
+class Anniversary : public event,public eventlist,public Gtk::Window
 {
 public:
 
@@ -155,7 +177,7 @@ void pick_theme2();
 void pick_theme3();
 };
 
-class Party: public event, public Gtk::Window
+class Party: public event,public eventlist,public Gtk::Window
 {
 public:
 
