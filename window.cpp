@@ -7,7 +7,8 @@
 
 
 		int value=0;
-
+		
+        
 		main_menu::main_menu()
 		:box(Gtk::ORIENTATION_VERTICAL),
 		customer("Customer"),
@@ -37,14 +38,58 @@
 
 		}
 
-		void main_menu:: Customer()
+    customer_name::customer_name()
+	:box(Gtk::ORIENTATION_VERTICAL),
+	send("Send")
+	{
+		set_size_request(350,200);
+		set_title("Name");
+		add(box);
+
+        label.set_text("Enter the customer name: ");
+        box.pack_start(label);
+    	box.pack_start(input);
+    	box.pack_start(textbox);
+
+		
+		send.signal_clicked().connect(sigc::mem_fun(*this,&customer_name::send_val));
+				box.pack_start(send);
+				show_all_children();
+
+	}
+    
+	/*std::vector<std::string> customer_name::get_vector(std::vector<std::string> &cust_names)
+	{
+    return cust_names;
+	}*/
+
+	void customer_name::send_val()
+	{
+    std::string	customerName = input.get_text();
+	main_win newwin;
+	hide();
+	Gtk::Main::run(newwin);
+    std::ofstream fp;
+	std::string customer_file = customerName + ".txt";
+	fp.open("file.txt",ios::app);	
+	fp<<customer_file<<endl;
+	fp.close();
+	}
+
+    customer_name::~customer_name()
+	{
+
+	}
+
+    void main_menu:: Customer()
 		{
-		main_win newwin;
+        customer_name new_name;
 		hide();
-		Gtk::Main::run(newwin);
-		hide();
+		Gtk::Main::run(new_name);
+		
 		}
 
+	
 		void main_menu:: Guest()
 		{
 			
@@ -140,12 +185,22 @@
 			value = 1;
 			hide();
 		new_eventt n;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"\nEvent: Wedding"<<std::endl;
-		fp.close();
-		Gtk::Main::run(n);
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::ofstream ofile;
+		file_names.open("file.txt");
+
+		std::getline(file_names,name);
 		
+		std::cout<<name<<std::endl;
+
+		file_names.close();
+		ofile.open(name.c_str());
+		//std::string file_use = names[names.size()-1];
+		ofile<<"\nEvent: Wedding"<<std::endl;
+		ofile.close();
+		Gtk::Main::run(n);
 		close();
 		}
 
@@ -155,9 +210,15 @@
 			hide();
 		new_eventt n;
 		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"\nEvent: Birthday"<<std::endl;
-		fp.close();
+		//std::string file_use = names[0];
+		//std::cout<<file_use<<"hello"<<std::endl;
+		//fp.open(file_use.c_str());
+		//if(fp.is_open())
+		//{
+			//std::cout<<"good!";
+		//}
+		//fp<<"\nEvent: Birthday"<<std::endl;
+		//fp.close();
 		Gtk::Main::run(n);
 		}
 
@@ -166,10 +227,6 @@
 			value = 4;
 			hide();
 		new_eventt n;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"\nEvent: Party"<<std::endl;
-		fp.close();
 		Gtk::Main::run(n);
 		
 		}
@@ -179,10 +236,6 @@
 			value = 3;
 			hide();
 		new_eventt n;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"\nEvent: Anniversary"<<std::endl;
-		fp.close();
 		Gtk::Main::run(n);
 	
 		}
@@ -303,7 +356,7 @@
 		close();
 		std::ofstream fp;
         fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 
@@ -317,7 +370,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
         fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 
 		close();
@@ -373,7 +426,7 @@
 		dialog.run();
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		close();
 		//std::cout<<event_theme<<std::endl;
@@ -389,7 +442,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 
@@ -404,7 +457,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 
@@ -454,7 +507,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 		void Birthday::pick_theme2()
@@ -468,7 +521,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 
@@ -483,7 +536,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 		Birthday::~Birthday()
@@ -504,7 +557,7 @@
 			theme_2.add_label("Black and White");
 			
 			image_3.set("party3.jpg");
-			theme_3.add_label("Masquerade ball");
+			theme_3.add_label("Masquerade Ball");
 			box4.pack_start(image_3);
 
 			box.pack_start(box2);
@@ -535,7 +588,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 		void Party::pick_theme2()
@@ -549,13 +602,13 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 
 		void Party::pick_theme3()
 		{
-		event_theme = "Masquerade ball";
+		event_theme = "Masquerade Ball";
 		std::string  di_final = event_theme + " theme picked";
 		Gtk::MessageDialog dialog(*this,"Theme",false,Gtk::MESSAGE_INFO);	
 		dialog.set_secondary_text(di_final);
@@ -564,7 +617,7 @@
 		//std::cout<<event_theme<<std::endl;
 		std::ofstream fp;
 		fp.open("event.txt",ios::app);
-		fp<<"theme: "<<event_theme<<std::endl;
+		fp<<"Theme: "<<event_theme<<std::endl;
 		fp.close();
 		}
 		Party::~Party()
