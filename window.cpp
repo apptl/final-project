@@ -68,12 +68,12 @@
     std::string	customerName = input.get_text();
 	main_win newwin;
 	hide();
-	Gtk::Main::run(newwin);
-    std::ofstream fp;
+    std::fstream fp;
 	std::string customer_file = customerName + ".txt";
 	fp.open("file.txt",ios::app);	
 	fp<<customer_file<<endl;
 	fp.close();
+	Gtk::Main::run(newwin);
 	}
 
     customer_name::~customer_name()
@@ -188,17 +188,28 @@
 		std::string name;
 		std:string temp;
 		std::ifstream file_names;
-		std::ofstream ofile;
-		file_names.open("file.txt");
+		std::vector <std::string> vector_filesnames;
 
-		std::getline(file_names,name);
-		
-		std::cout<<name<<std::endl;
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+
+		for(int i =0; i<vector_filesnames.size()-1;i++){
+			std::cout<<vector_filesnames[i]<<std::endl;
+		} 
 
 		file_names.close();
-		ofile.open(name.c_str());
-		//std::string file_use = names[names.size()-1];
-		ofile<<"\nEvent: Wedding"<<std::endl;
+
+		int size = vector_filesnames.size();
+        //std::cout<<size<<std::endl;
+		std::string file_use = vector_filesnames[size -1];
+     	//std::cout<<file_use<<std::endl;
+        
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Event: Wedding"<<std::endl;
 		ofile.close();
 		Gtk::Main::run(n);
 		close();
@@ -209,16 +220,33 @@
 			value = 2;
 			hide();
 		new_eventt n;
-		std::ofstream fp;
-		//std::string file_use = names[0];
-		//std::cout<<file_use<<"hello"<<std::endl;
-		//fp.open(file_use.c_str());
-		//if(fp.is_open())
-		//{
-			//std::cout<<"good!";
-		//}
-		//fp<<"\nEvent: Birthday"<<std::endl;
-		//fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+
+		for(int i =0; i<vector_filesnames.size()-1;i++){
+			std::cout<<vector_filesnames[i]<<std::endl;
+		} 
+
+		file_names.close();
+
+		int size = vector_filesnames.size();
+        //std::cout<<size<<std::endl;
+		std::string file_use = vector_filesnames[size -1];
+     	//std::cout<<file_use<<std::endl;
+        
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Event: Birthday"<<std::endl;
+		ofile.close();
+		
 		Gtk::Main::run(n);
 		}
 
@@ -227,6 +255,32 @@
 			value = 4;
 			hide();
 		new_eventt n;
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+
+		for(int i =0; i<vector_filesnames.size()-1;i++){
+			std::cout<<vector_filesnames[i]<<std::endl;
+		} 
+
+		file_names.close();
+
+		int size = vector_filesnames.size();
+        //std::cout<<size<<std::endl;
+		std::string file_use = vector_filesnames[size -1];
+     	//std::cout<<file_use<<std::endl;
+        
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Event: Party"<<std::endl;
+		ofile.close();
 		Gtk::Main::run(n);
 		
 		}
@@ -236,6 +290,28 @@
 			value = 3;
 			hide();
 		new_eventt n;
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+
+		file_names.close();
+
+		int size = vector_filesnames.size();
+        //std::cout<<size<<std::endl;
+		std::string file_use = vector_filesnames[size -1];
+     	//std::cout<<file_use<<std::endl;
+        
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Event: Anniversary"<<std::endl;
+		ofile.close();
 		Gtk::Main::run(n);
 	
 		}
@@ -338,12 +414,24 @@
 		dialog.set_secondary_text(di_final);
 		dialog.run();
 		close();
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
-		//std::cout<<event_theme<<std::endl;
-		//entries.push_back(event_theme);
+
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Modern"<<std::endl;
+		ofile.close();
 		}
 
 		void Wedding::pick_theme2()
@@ -354,10 +442,23 @@
 		dialog.set_secondary_text(di_final);
 		dialog.run();
 		close();
-		std::ofstream fp;
-        fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Rustic"<<std::endl;
+		ofile.close();
 		}
 
 		void Wedding::pick_theme3()
@@ -368,10 +469,23 @@
 		dialog.set_secondary_text(di_final);
 		dialog.run();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-        fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Vintage"<<std::endl;
+		ofile.close();
 
 		close();
 		}
@@ -424,10 +538,23 @@
 		Gtk::MessageDialog dialog(*this,"Theme",false,Gtk::MESSAGE_INFO);	
 		dialog.set_secondary_text(di_final);
 		dialog.run();
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Cute as Cotton"<<std::endl;
+		ofile.close();
 		close();
 		//std::cout<<event_theme<<std::endl;
 		}
@@ -440,10 +567,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Lantern Love"<<std::endl;
+		ofile.close();
 		}
 
 		void Anniversary::pick_theme3()
@@ -455,10 +595,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Pretty Plank"<<std::endl;
+		ofile.close();
 		}
 
 		Birthday::Birthday()
@@ -505,10 +658,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Circus"<<std::endl;
+		ofile.close();
 		}
 		void Birthday::pick_theme2()
 		{
@@ -519,10 +685,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Garden"<<std::endl;
+		ofile.close();
 		}
 
 		void Birthday::pick_theme3()
@@ -534,10 +713,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Marvel"<<std::endl;
+		ofile.close();
 		}
 		Birthday::~Birthday()
 		{}
@@ -586,10 +778,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Alice in Wonderland"<<std::endl;
+		ofile.close();
 		}
 		void Party::pick_theme2()
 		{
@@ -600,10 +805,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Black and White"<<std::endl;
+		ofile.close();
 		}
 
 		void Party::pick_theme3()
@@ -615,10 +833,23 @@
 		dialog.run();
 		close();
 		//std::cout<<event_theme<<std::endl;
-		std::ofstream fp;
-		fp.open("event.txt",ios::app);
-		fp<<"Theme: "<<event_theme<<std::endl;
-		fp.close();
+		std::string name;
+		std:string temp;
+		std::ifstream file_names;
+		std::vector <std::string> vector_filesnames;
+
+		file_names.open("file.txt");
+		while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+		}
+		file_names.close();
+		int size = vector_filesnames.size();  
+		std::string file_use = vector_filesnames[size -1];    	
+        std::fstream ofile;
+		ofile.open(file_use, ios::in | ios::app);
+		ofile<<"Theme: Masquerade Ball"<<std::endl;
+		ofile.close();
 		}
 		Party::~Party()
 		{}
