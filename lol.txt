@@ -1,2 +1,0 @@
-Event: Party
-Theme: Masquerade Ball

@@ -11,7 +11,7 @@ using namespace std;
 class person_name
 {
 public:
-    vector <string> names; 
+vector <string> names; 
 };
 
 class event
@@ -39,6 +39,7 @@ public:
     void Guest();
     void Admin();
     void Customer_name();
+    
 
 
     main_menu();
@@ -56,6 +57,7 @@ public:
     //std::vector<std::string> cust_names;
     customer_name();
     virtual ~customer_name();
+    
     void send_val();
 };
 
@@ -66,20 +68,23 @@ public:
     Gtk::Label label;
     Gtk::Entry input;
     Gtk::Box textbox;
-    Gtk::Button send;
+    Gtk::Button edit;
+    
     admin_window();
     virtual ~admin_window();
+    void Edit_event();
 };
 
 class main_win:public Gtk::Window
 {
 public:
     Gtk::Box box;
-    Gtk::Button new_event,edit_event,back;
+    Gtk::Button new_event,view_event,back;
     Gtk::Label title;
 
     void New_event();
-    void Edit_event();
+    void View_event();
+    
     void Back();
 
     main_win();
@@ -113,6 +118,8 @@ public:
     void clicked();
     void pick_new_theme();
     void pick_food_package();
+    void pick_the_date();
+    void pick_num_people();
     new_eventt();
     void new_wedding();
     void new_birthday();
@@ -207,6 +214,47 @@ public:
     void pick_theme1();
     void pick_theme2();
     void pick_theme3();
+};
+
+class event_date: public Gtk::Window
+{
+public:
+    Gtk::Box box;
+    Gtk::Label label;
+    Gtk::Entry input;
+    Gtk::Box textbox;
+    Gtk::Button pick,back;
+    
+    event_date();
+    virtual ~event_date();
+    void Pick_date();
+    void Back();
+};
+
+class event_people: public Gtk::Window
+{
+public:
+    Gtk::Box box;
+    Gtk::Label label;
+    Gtk::Entry input;
+    Gtk::Box textbox;
+    Gtk::Button enter,back;
+    
+    event_people();
+    virtual ~event_people();
+    void Enter();
+    void Back();
+};
+
+class event_view: public Gtk::Window
+{
+public:
+    Gtk::Box box;
+    Gtk::Dialog MessageDialog;
+    Gtk::Label label;
+    
+    event_view();        
+    virtual ~event_view();
 };
 
 #endif
