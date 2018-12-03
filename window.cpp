@@ -5,9 +5,8 @@
 #include <string> 
 #include <fstream>
 
-int value=0;
-		
-main_menu::main_menu()
+// A Window created to choose whether the user is - Customer, Admin, or Guest
+main_menu::main_menu() 
 :box(Gtk::ORIENTATION_VERTICAL),
 customer("Customer"),
 guest("Guest"),
@@ -29,10 +28,17 @@ admin("Admin")
 	show_all_children();
 }
 
-main_menu::~main_menu()
+main_menu::~main_menu() //Destructor for main_menu
 {}
 
-customer_name::customer_name()
+void main_menu::Admin()
+{
+	admin_things new_things;
+	hide();
+	Gtk::Main::run(new_things);
+}
+
+customer_name::customer_name() // A Window for the customer to enter their name
 :box(Gtk::ORIENTATION_VERTICAL),
 send("Send")
 {
@@ -51,12 +57,8 @@ send("Send")
 	show_all_children();
 }
     
-/*std::vector<std::string> customer_name::get_vector(std::vector<std::string> &cust_names)
-{
-    return cust_names;
-}*/
 
-void customer_name::send_val()
+void customer_name::send_val() // A function to open a file on the Customer's name to enter their event details
 {
     std::string	customerName = input.get_text();
 	main_win newwin;
@@ -69,15 +71,59 @@ void customer_name::send_val()
 	Gtk::Main::run(newwin);
 }
 
-customer_name::~customer_name()
+customer_name::~customer_name() // Destructor for customer_name
 {}
 
-admin_window::admin_window()
+admin_things::admin_things()
 :box(Gtk::ORIENTATION_VERTICAL),
-edit("Edit")
+sort("Sort"),
+edit("Edit"),
+back("Back")
 {
 	set_size_request(350,200);
-	set_title("Edit event");
+	set_title("Admin");
+	add(box);
+
+	sort.signal_clicked().connect(sigc::mem_fun(*this,&admin_things::Sorting));
+	box.pack_start(sort);
+
+    edit.signal_clicked().connect(sigc::mem_fun(*this,&admin_things::Editing));
+	box.pack_start(edit);
+
+	back.signal_clicked().connect(sigc::mem_fun(*this,&admin_things::Back));
+	box.pack_start(back);
+	
+
+    show_all_children();
+	}
+admin_things::~admin_things()
+	{
+
+	}
+
+
+void admin_things::Sorting()
+{
+		
+}
+void admin_things::Editing()
+{
+edit_eventt new_win_admin;
+hide();
+Gtk::Main::run(new_win_admin);
+}
+
+void admin_things::Back()
+{
+
+}
+
+admin_window::admin_window() // A Window for the admin to edit or sort the event based on the customer's name
+:box(Gtk::ORIENTATION_VERTICAL),
+send("Send")
+{
+	set_size_request(350,200);
+	set_title("info");
 	add(box);
 	
     label.set_text("Enter the customer's name: ");
@@ -85,26 +131,34 @@ edit("Edit")
     box.pack_start(input);
     box.pack_start(textbox);
 
-	edit.signal_clicked().connect(sigc::mem_fun(*this,&admin_window::Edit_event));
-		box.pack_start(edit);
+	send.signal_clicked().connect(sigc::mem_fun(*this,&admin_window::Send_name));
+		box.pack_start(send);
 
     show_all_children();
 }
+int value=0;
 
-void admin_window::Edit_event()
+void admin_window::Send_name() // A function to get the name entered by the admin 
 {
-    std::string	customerName = input.get_text();
-	std::string file_name = customerName + ".txt";
-	std::fstream fp;
-	fp.open(file_name,ios::in | ios::app);	
+	std::string e_name = input.get_text();
+	e_name = e_name + ".txt";
+	std::fstream ofile;
+	ofile.open("edit.txt",ios::out | ios::app);
+	ofile<<e_name;
+	ofile.close();
 
-	fp.close();
+	change_people people_new;
+   hide();
+    Gtk::Main::run(people_new);
 }
+
 
 admin_window::~admin_window()
 {}
 
-void main_menu:: Customer()
+
+
+void main_menu:: Customer() // A function to create an object of the customer_name class
 {
     customer_name new_name;
 	hide();
@@ -116,14 +170,9 @@ void main_menu:: Guest()
 			
 }
 
-void main_menu:: Admin()
-{
-    admin_window admin_win;
-	hide();
-	Gtk::Main::run(admin_win);
-}
-		
-main_win::main_win()
+int number_of_people = 0;
+
+main_win::main_win() // A Window for the Customer to choose whether to create a new event of view event details
 :box(Gtk::ORIENTATION_VERTICAL),
 new_event("New Event"),
 view_event("View event"),
@@ -138,6 +187,7 @@ back("Back")
 
 	new_event.signal_clicked().connect(sigc::mem_fun(*this,&main_win::New_event));
 		box.pack_start(new_event);
+
 	view_event.signal_clicked().connect(sigc::mem_fun(*this,&main_win::View_event));
 		box.pack_start(view_event);
 
@@ -149,23 +199,70 @@ back("Back")
 
 main_win:: ~main_win()
 {}
-event_view::event_view()
+
+event_view::event_view() // A Window for the customer to view their event details
 {
+	set_size_request(350,200);
+	set_title("View Your Event Details");
+	add(box);
+	
+    std::string name;
+	std:string temp;
+	std::ifstream file_names;
+	std::vector <std::string> vector_filesnames;
 
+	file_names.open("file.txt");
+	while(!file_names.eof()){
+		file_names>>name;
+    	vector_filesnames.push_back(name);
+	}
+
+	file_names.close();
+
+	int size = vector_filesnames.size();
+	
+	std::string file_use = vector_filesnames[size -1];
+	
+	std::vector <std::string> vector_data;
+	std::string data_string;
+        
+	std::ifstream ifile;
+	ifile.open(file_use, ios::in | ios::app);
+	while(!ifile.eof()){
+		std::getline(ifile,data_string);
+    	vector_data.push_back(data_string);
+	}
+   
+	ifile.close();
+
+	label1.set_text(vector_data[0]);
+		box.pack_start(label1);
+
+	label2.set_text(vector_data[1]);
+		box.pack_start(label2);
+
+	label3.set_text(vector_data[2]);
+		box.pack_start(label3);
+
+	label4.set_text(vector_data[3]);
+		box.pack_start(label4);
+
+	label5.set_text(vector_data[4]);
+		box.pack_start(label5);
+
+	label6.set_text(vector_data[5]);
+		box.pack_start(label6);
+
+	back.signal_clicked().connect(sigc::mem_fun(*this,&event_view::Back));
+		box.pack_start(back);
+
+	show_all_children();
 }
-
-
 
 event_view::~event_view()
 {}
-void main_win:: View_event()
-{
-event_view new_view;
-hide();
-Gtk::Main::run(new_view);
-}
 
-void main_win:: Back()
+void event_view:: Back() //A function for the object of main_menu class
 {
 	main_menu newwin;
 	hide();
@@ -173,7 +270,22 @@ void main_win:: Back()
 	hide();
 }
 
-void main_win::New_event()
+void main_win:: View_event() // A function for the object of event_view class
+{
+	event_view new_view;
+	hide();
+	Gtk::Main::run(new_view);
+}
+
+void main_win:: Back() // A function for the object of main_menu class
+{
+	main_menu newwin;
+	hide();
+	Gtk::Main::run(newwin);
+	hide();
+}
+
+void main_win:: New_event() // A function for the object of type_of_event class
 {			
 	type_of_event type;
 	hide();
@@ -181,7 +293,7 @@ void main_win::New_event()
 	hide();
 }
 
-type_of_event::type_of_event()
+type_of_event::type_of_event() // A Window for the Customer to choose the type of event 
 :box(Gtk::ORIENTATION_VERTICAL),
 button_wedding("Wedding"),
 button_birthday("Birthday"),
@@ -211,7 +323,7 @@ button_back("Back")
 	show_all_children();
 }
 
-void type_of_event::wedding()
+void type_of_event::wedding() // A Function to enter the details of wedding that the Customer has chosen 
 {
 	value = 1;
 	hide();
@@ -227,16 +339,14 @@ void type_of_event::wedding()
     	vector_filesnames.push_back(name);
 	}
 
-	for(int i =0; i<vector_filesnames.size()-1;i++){
-		std::cout<<vector_filesnames[i]<<std::endl;
-	} 
+	
 
 	file_names.close();
 
 	int size = vector_filesnames.size();
-	//std::cout<<size<<std::endl;
+	
 	std::string file_use = vector_filesnames[size -1];
-	//std::cout<<file_use<<std::endl;
+	
         
 	std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
@@ -246,7 +356,7 @@ void type_of_event::wedding()
 	close();
 }
 
-void type_of_event::birthday()
+void type_of_event::birthday() //A Function to enter the details of birthday that the Customer has chosen
 {
 	value = 2;
 	hide();
@@ -262,17 +372,14 @@ void type_of_event::birthday()
     	vector_filesnames.push_back(name);
 	}
 
-	for(int i =0; i<vector_filesnames.size()-1;i++){
-		std::cout<<vector_filesnames[i]<<std::endl;
-	} 
+	
 
 	file_names.close();
 
 	int size = vector_filesnames.size();
-    //std::cout<<size<<std::endl;
+    
 	std::string file_use = vector_filesnames[size -1];
-    //std::cout<<file_use<<std::endl;
-        
+    
     std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
 	ofile<<"Event: Birthday"<<std::endl;
@@ -281,7 +388,7 @@ void type_of_event::birthday()
 	Gtk::Main::run(n);
 }
 
-void type_of_event::party()
+void type_of_event::party() //A Function to enter the details of party that the Customer has chosen
 {
 	value = 4;
 	hide();
@@ -297,16 +404,14 @@ void type_of_event::party()
     	vector_filesnames.push_back(name);
 	}
 
-	for(int i =0; i<vector_filesnames.size()-1;i++){
-		std::cout<<vector_filesnames[i]<<std::endl;
-	} 
+	
 
 	file_names.close();
 
 	int size = vector_filesnames.size();
-    //std::cout<<size<<std::endl;
+    
 	std::string file_use = vector_filesnames[size -1];
-    //std::cout<<file_use<<std::endl;
+    
         
     std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
@@ -315,7 +420,7 @@ void type_of_event::party()
 	Gtk::Main::run(n);		
 }
 
-void type_of_event::anniversary()
+void type_of_event::anniversary() //A Function to enter the details of anniversary that the Customer has chosen
 {
 	value = 3;
 	hide();
@@ -334,10 +439,9 @@ void type_of_event::anniversary()
 	file_names.close();
 
 	int size = vector_filesnames.size();
-    //std::cout<<size<<std::endl;
+    
 	std::string file_use = vector_filesnames[size -1];
-    //std::cout<<file_use<<std::endl;
-        
+    
     std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
 	ofile<<"Event: Anniversary"<<std::endl;
@@ -352,106 +456,46 @@ void type_of_event::back()
 	Gtk::Main::run(newwin);
 }
 
-type_of_event::~type_of_event()
+type_of_event:: ~type_of_event()
 {}
 
-new_eventt:: ~new_eventt()
-{}
-
-new_eventt::new_eventt()
-:box(Gtk::ORIENTATION_VERTICAL),
-button_theme("Choose a Theme"),
-button_food("Food Package"),
-button_date("Date"),
-button_numpeople("Number of People"),
-button_back("Back")
-{
-	set_size_request(350,200);
-	set_title("New Event");
+food_package::food_package()
+{ 
+set_size_request(450,300);
+	set_title("Food Package");
 	add(box);
 
-	button_theme.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_new_theme));
-		box.pack_start(button_theme);
+	image_1.set("package1.jpg");
+		box2.pack_start(image_1);
+		package_1.add_label("Package 1");
+			
+	image_2.set("package2.jpg");
+		box3.pack_start(image_2);
+		package_2.add_label("Package 2");
+			
+	image_3.set("package3.jpg");
+		package_3.add_label("Package 3");
+		box4.pack_start(image_3);
 
-	button_food.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::clicked));
-		box.pack_start(button_food);
+	box.pack_start(box2);
+	box.pack_start(box3);
+	box.pack_start(box4);
+			
 
-	button_date.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_the_date));
-		box.pack_start(button_date);
-
-	button_numpeople.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_num_people));
-		box.pack_start(button_numpeople);
-
-	button_back.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::back));
-		box.pack_start(button_back);
-
-	show_all_children();
-}
-
-event_date::event_date()
-:box(Gtk::ORIENTATION_VERTICAL),
-pick("Pick"),
-back("Back")
-{
-    set_size_request(350,200);
-	set_title("Pick a Date");
-	add(box);
-
-	label.set_text("Enter the Date(MM/DD/YYYY): ");
-    box.pack_start(label);
-    box.pack_start(input);
-    box.pack_start(textbox);
-
-	pick.signal_clicked().connect(sigc::mem_fun(*this,&event_date::Pick_date));
-		box.pack_start(pick);
-
-	back.signal_clicked().connect(sigc::mem_fun(*this,&event_date::Back));
-		box.pack_start(back);
+	package_1.signal_clicked().connect(sigc::mem_fun(*this,&food_package::pick_pack1));
+		box2.pack_start(package_1);
+	package_2.signal_clicked().connect(sigc::mem_fun(*this,&food_package::pick_pack2));
+		box3.pack_start(package_2);
+	package_3.signal_clicked().connect(sigc::mem_fun(*this,&food_package::pick_pack3));
+		box4.pack_start(package_3);	
 
 	show_all_children();
+
 }
 
-event_date::~event_date()
+food_package::~food_package()
 {}
-
-void event_date::Back()
-{
-	new_eventt event_back;
-	hide();
-	Gtk::Main::run(event_back);
-}
-
-void event_date::Pick_date()
-{
-	std::string	Date = input.get_text();
-	
-	std::string name;
-	std:string temp;
-	std::ifstream file_names;
-	std::vector <std::string> vector_filesnames;
-
-	file_names.open("file.txt");
-	while(!file_names.eof()){
-		file_names>>name;
-        vector_filesnames.push_back(name);
-	}
-
-	file_names.close();
-
-	int size = vector_filesnames.size();
-        
-	std::string file_use = vector_filesnames[size -1];
-     	   
-    std::fstream ofile;
-	ofile.open(file_use, ios::in | ios::app);
-	ofile<<"Date: "<<Date<<std::endl;
-	ofile.close();
-	new_eventt event_back;
-	hide();
-	Gtk::Main::run(event_back);
-}
-
-event_people::event_people()
+event_people::event_people() // A Window for the Customer to enter the # people attending
 :box(Gtk::ORIENTATION_VERTICAL),
 enter("Enter"),
 back("Back")
@@ -484,9 +528,11 @@ void event_people::Back()
 	Gtk::Main::run(event_back);
 }
 
-void event_people::Enter()
+void event_people::Enter() // A function to write to the file the # of people that the Customer has entered 
 {
 	std::string	Num_of_people = input.get_text();
+	number_of_people = stoi(Num_of_people);
+	
 	
 	std::string name;
 	std:string temp;
@@ -503,8 +549,7 @@ void event_people::Enter()
 
 	int size = vector_filesnames.size();
         
-	std::string file_use = vector_filesnames[size -1];
-     	     
+	std::string file_use = vector_filesnames[size -1];     	     
 	std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
 	ofile<<"People: "<<Num_of_people<<std::endl;
@@ -514,28 +559,241 @@ void event_people::Enter()
 	Gtk::Main::run(event_back);
 }
 
-void new_eventt::pick_the_date()
+void food_package::pick_pack1()
+{ 
+	std::string package_name = "package 1";
+	std::string  di_final = package_name + "  picked";
+	Gtk::MessageDialog dialog(*this,"Food Package",false,Gtk::MESSAGE_INFO);	
+	dialog.set_secondary_text(di_final);
+	dialog.run();
+	close();
+	std::string name;
+	
+	std::ifstream file_names;
+	std::vector <std::string> vector_filesnames;
+
+	file_names.open("file.txt");
+	while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+	}
+
+	file_names.close();
+	int size = vector_filesnames.size();  
+	std::string file_use = vector_filesnames[size -1];    	
+    std::fstream ofile;
+	ofile.open(file_use, ios::in | ios::app);
+	ofile<<"Food Package: foodpackage1"<<std::endl;
+	float t_cost = number_of_people * 17.99;
+	ofile<<"Cost: $"<<t_cost<<std::endl;
+	ofile.close();
+	new_eventt event_back;
+	hide();
+	Gtk::Main::run(event_back);
+
+
+}
+
+void food_package::pick_pack2()
+{ 
+	std::string package_name = "package 2";
+	std::string  di_final = package_name + "  picked";
+	Gtk::MessageDialog dialog(*this,"Food Package",false,Gtk::MESSAGE_INFO);	
+	dialog.set_secondary_text(di_final);
+	dialog.run();
+	close();
+	std::string name;
+	
+	std::ifstream file_names;
+	std::vector <std::string> vector_filesnames;
+
+	file_names.open("file.txt");
+	while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+	}
+
+	file_names.close();
+	int size = vector_filesnames.size();  
+	std::string file_use = vector_filesnames[size -1];    	
+    std::fstream ofile;
+	ofile.open(file_use, ios::in | ios::app);
+	ofile<<"Food Package: foodpackage2"<<std::endl;
+	float t_cost = number_of_people * 20.99;
+	ofile<<"Cost: $"<<t_cost<<std::endl;
+	ofile.close();
+	new_eventt event_back;
+	hide();
+	Gtk::Main::run(event_back);
+}
+
+void food_package::pick_pack3()
+{ 
+	std::string package_name = "package 3";
+	std::string  di_final = package_name + "  picked";
+	Gtk::MessageDialog dialog(*this,"Food Package",false,Gtk::MESSAGE_INFO);	
+	dialog.set_secondary_text(di_final);
+	dialog.run();
+	close();
+	std::string name;
+	
+	std::ifstream file_names;
+	std::vector <std::string> vector_filesnames;
+
+	file_names.open("file.txt");
+	while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+	}
+
+	file_names.close();
+	int size = vector_filesnames.size();  
+	std::string file_use = vector_filesnames[size -1];    	
+    std::fstream ofile;
+	ofile.open(file_use, ios::in | ios::app);
+	ofile<<"Food Package: foodpackage3"<<std::endl;
+	float t_cost = number_of_people * 25.99;
+	ofile<<"Cost: $"<<t_cost<<std::endl;
+	ofile.close();
+
+	new_eventt event_back;
+	hide();
+	Gtk::Main::run(event_back);
+}
+
+
+new_eventt:: ~new_eventt()
+{}
+
+new_eventt::new_eventt() // A Window for the Customer to choose the details of the event 
+:box(Gtk::ORIENTATION_VERTICAL),
+button_theme("Choose a Theme"),
+button_food("Food Package"),
+button_date("Date"),
+button_numpeople("Number of People"),
+button_back("Back")
+{
+	set_size_request(350,200);
+	set_title("New Event");
+	add(box);
+
+	button_theme.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_new_theme));
+		box.pack_start(button_theme);
+
+	button_numpeople.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_num_people));
+		box.pack_start(button_numpeople);
+
+	button_food.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_food_package));
+		box.pack_start(button_food);
+
+	button_date.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::pick_the_date));
+		box.pack_start(button_date);
+
+	
+
+	button_back.signal_clicked().connect(sigc::mem_fun(*this,&new_eventt::back));
+		box.pack_start(button_back);
+
+	show_all_children();
+}
+
+
+
+event_date::event_date() // A Window for the Customer to enter the date of the event
+:box(Gtk::ORIENTATION_VERTICAL),
+pick("Pick"),
+back("Back")
+{
+    set_size_request(350,200);
+	set_title("Pick a Date");
+	add(box);
+
+	label.set_text("Enter the Date(MM/DD/YYYY): ");
+    box.pack_start(label);
+    box.pack_start(input);
+    box.pack_start(textbox);
+
+	pick.signal_clicked().connect(sigc::mem_fun(*this,&event_date::Pick_date));
+		box.pack_start(pick);
+
+	back.signal_clicked().connect(sigc::mem_fun(*this,&event_date::Back));
+		box.pack_start(back);
+
+	show_all_children();
+}
+
+event_date::~event_date()
+{}
+
+void event_date::Back()
+{
+	new_eventt event_back;
+	hide();
+	Gtk::Main::run(event_back);
+}
+
+void event_date::Pick_date() // A function enter the date the Customer has choosen 
+{
+	std::string	Date = input.get_text();
+	
+	std::string name;
+	std:string temp;
+	std::ifstream file_names;
+	std::vector <std::string> vector_filesnames;
+
+	file_names.open("file.txt");
+	while(!file_names.eof()){
+		file_names>>name;
+        vector_filesnames.push_back(name);
+	}
+
+	file_names.close();
+
+	int size = vector_filesnames.size();
+        
+	std::string file_use = vector_filesnames[size -1];
+     	   
+    std::fstream ofile;
+	ofile.open(file_use, ios::in | ios::app);
+	ofile<<"Date: "<<Date<<std::endl;
+	ofile.close();
+	new_eventt event_back;
+	hide();
+	Gtk::Main::run(event_back);
+}
+
+
+
+void new_eventt::pick_the_date() // A function for an object of class event_date
 {
 	event_date new_date;
 	hide();
 	Gtk::Main::run(new_date);
 }
 
-void new_eventt::pick_num_people()
+void new_eventt::pick_num_people() // A function for an object of class event_people
 {
 	event_people amount_ppl;
 	hide();
 	Gtk::Main::run(amount_ppl);
 }
 
+void new_eventt::pick_food_package() 
+	{
+	food_package pack;
+	hide();
+	Gtk::Main::run(pack);
+	}
+
+
 void new_eventt::back()
 {
-	hide();
 	type_of_event newwin;
+	hide();
 	Gtk::Main::run(newwin);
 }
 
-Wedding::Wedding()
+Wedding::Wedding() // A Window that allows the user to choose their theme for Wedding
 {
 	set_size_request(450,300);
 	set_title("Theme");
@@ -568,7 +826,7 @@ Wedding::Wedding()
 	show_all_children();
 }
 
-void Wedding::pick_theme1()
+void Wedding::pick_theme1() // A function to write the option the Customer picked
 {
 	event_theme = "Modern";
 	std::string  di_final = event_theme + " theme picked";
@@ -597,7 +855,7 @@ void Wedding::pick_theme1()
 	ofile.close();
 }
 
-void Wedding::pick_theme2()
+void Wedding::pick_theme2() // A function to write the option the Customer picked
 {
 	event_theme = "Rustic";
 	std::string  di_final = event_theme + " theme picked";
@@ -625,14 +883,14 @@ void Wedding::pick_theme2()
 	ofile.close();
 }
 
-void Wedding::pick_theme3()
+void Wedding::pick_theme3() // A function to write the option the Customer picked
 {
 	event_theme = "Vintage";
 	std::string  di_final = event_theme + " theme picked";
 	Gtk::MessageDialog dialog(*this,"Theme",false,Gtk::MESSAGE_INFO);	
 	dialog.set_secondary_text(di_final);
 	dialog.run();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -657,7 +915,7 @@ void Wedding::pick_theme3()
 Wedding::~Wedding()
 {}
 
-Anniversary::Anniversary()
+Anniversary::Anniversary() // A Window that allows the user to choose their theme for Anniversary
 {
 	set_size_request(450,300);
 	set_title("Theme");
@@ -693,7 +951,7 @@ Anniversary::Anniversary()
 Anniversary::~Anniversary()
 {}
 
-void Anniversary::pick_theme1()
+void Anniversary::pick_theme1() // A function to write the option the Customer picked
 {
 	event_theme = "Cute as Cotton";
 	std::string  di_final = event_theme + " theme picked";
@@ -719,18 +977,18 @@ void Anniversary::pick_theme1()
 	ofile<<"Theme: Cute as Cotton"<<std::endl;
 	ofile.close();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 }
 
-void Anniversary::pick_theme2()
-{
+void Anniversary::pick_theme2() // A function to write the option the Customer picked
+{ 
 	event_theme = "Lantern Love";
 	std::string  di_final = event_theme + " theme picked";
 	Gtk::MessageDialog dialog(*this,"Theme",false,Gtk::MESSAGE_INFO);	
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -751,7 +1009,7 @@ void Anniversary::pick_theme2()
 	ofile.close();
 }
 
-void Anniversary::pick_theme3()
+void Anniversary::pick_theme3() // A function to write the option the Customer picked
 {
 	event_theme = "Pretty Plank";
 	std::string  di_final = event_theme + " theme picked";
@@ -759,7 +1017,7 @@ void Anniversary::pick_theme3()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -780,7 +1038,7 @@ void Anniversary::pick_theme3()
 	ofile.close();
 }
 
-Birthday::Birthday()
+Birthday::Birthday() //A Window that allows the user to choose their theme for Anniversary
 {
 	set_size_request(450,300);
 	set_title("Theme");
@@ -813,7 +1071,7 @@ Birthday::Birthday()
 	show_all_children();
 }
 
-void Birthday::pick_theme1()
+void Birthday::pick_theme1() // A function to write the option the Customer picked
 {
 	event_theme = "Circus";
 	std::string  di_final = event_theme + " theme picked";
@@ -821,7 +1079,7 @@ void Birthday::pick_theme1()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -842,7 +1100,7 @@ void Birthday::pick_theme1()
 	ofile.close();
 }
 
-void Birthday::pick_theme2()
+void Birthday::pick_theme2() // A function to write the option the Customer picked
 {
 	event_theme = "Garden";
 	std::string  di_final = event_theme + " theme picked";
@@ -850,7 +1108,7 @@ void Birthday::pick_theme2()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -871,7 +1129,7 @@ void Birthday::pick_theme2()
 	ofile.close();
 }
 
-void Birthday::pick_theme3()
+void Birthday::pick_theme3() // A function to write the option the Customer picked
 {
 	event_theme = "Marvel";
 	std::string  di_final = event_theme + " theme picked";
@@ -879,7 +1137,7 @@ void Birthday::pick_theme3()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -903,7 +1161,7 @@ void Birthday::pick_theme3()
 Birthday::~Birthday()
 {}
 
-Party::Party()
+Party::Party() //A Window that allows the user to choose their theme for Anniversary
 {
 	set_size_request(450,300);
 	set_title("Theme");
@@ -935,7 +1193,7 @@ Party::Party()
 	show_all_children();
 }
 
-void Party::pick_theme1()
+void Party::pick_theme1() // A function to write the option the Customer picked
 {
 	event_theme = "Alice in Wonderland";
 	std::string  di_final = event_theme + " theme picked";
@@ -943,7 +1201,7 @@ void Party::pick_theme1()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -964,7 +1222,7 @@ void Party::pick_theme1()
 	ofile.close();
 }
 
-void Party::pick_theme2()
+void Party::pick_theme2() // A function to write the option the Customer picked
 {
 	event_theme = "Black and White";
 	std::string  di_final = event_theme + " theme picked";
@@ -972,7 +1230,7 @@ void Party::pick_theme2()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -993,7 +1251,7 @@ void Party::pick_theme2()
 	ofile.close();
 }
 
-void Party::pick_theme3()
+void Party::pick_theme3() // A function to write the option the Customer picked
 {
 	event_theme = "Masquerade Ball";
 	std::string  di_final = event_theme + " theme picked";
@@ -1001,7 +1259,7 @@ void Party::pick_theme3()
 	dialog.set_secondary_text(di_final);
 	dialog.run();
 	close();
-	//std::cout<<event_theme<<std::endl;
+	
 	std::string name;
 	std:string temp;
 	std::ifstream file_names;
@@ -1018,52 +1276,153 @@ void Party::pick_theme3()
 	std::string file_use = vector_filesnames[size -1];    	
     std::fstream ofile;
 	ofile.open(file_use, ios::in | ios::app);
-		ofile<<"Theme: Masquerade Ball"<<std::endl;
-		ofile.close();
-		}
-		Party::~Party()
-		{}
+	ofile<<"Theme: Masquerade Ball"<<std::endl;
+	ofile.close();
+}
 
-		void new_eventt::pick_new_theme()
-		{
-			switch(value){
-				case 1: new_wedding();
-				break;
-				case 2: new_birthday();
-				break;
-				case 3: new_anniversary();
-				break;
-				case 4: new_party();
-				break;
-			}
-			
-		}
+Party::~Party()
+{}
 
-		void new_eventt::new_wedding()
-		{
-		Wedding wed;
-		Gtk::Main::run(wed);
-		}
+void new_eventt::pick_new_theme()
+{
+	switch(value){
+		case 1: new_wedding();
+			break;
+		case 2: new_birthday();
+			break;
+		case 3: new_anniversary();
+			break;
+		case 4: new_party();
+			break;
+	}	
+}
 
-		void new_eventt::new_birthday()
-		{
-		Birthday ber;
-		Gtk::Main::run(ber);
-		}
+void new_eventt::new_wedding()
+{
+	Wedding wed;
+	Gtk::Main::run(wed);
+}
 
-		void new_eventt::new_anniversary()
-		{
-		Anniversary ann;
-		Gtk::Main::run(ann);
-		}
+void new_eventt::new_birthday()
+{
+	Birthday ber;
+	Gtk::Main::run(ber);
+}
 
-		void new_eventt::new_party()
-		{
-		Party par;
-		Gtk::Main::run(par);
-		}
+void new_eventt::new_anniversary()
+{
+	Anniversary ann;
+	Gtk::Main::run(ann);
+}
 
-		void new_eventt::clicked()
-		{
-			close();
-		}
+void new_eventt::new_party()
+{
+	Party par;
+	Gtk::Main::run(par);
+}
+
+void new_eventt::clicked()
+{
+	close();
+}
+
+edit_eventt::edit_eventt()
+:box(Gtk::ORIENTATION_VERTICAL),
+bydate("Edit Date"),
+bypeople("Edit people")
+{
+set_size_request(350,200);
+	set_title("Edit event");
+	add(box);
+	
+	bydate.signal_clicked().connect(sigc::mem_fun(*this,&edit_eventt::e_date));
+		box.pack_start(bydate);
+	bypeople.signal_clicked().connect(sigc::mem_fun(*this,&edit_eventt::e_people));
+		box.pack_start(bypeople);
+
+    show_all_children();
+
+}
+
+void edit_eventt::e_date()
+{
+    
+}
+
+
+
+void edit_eventt::e_people() //A function to edit the number of people for a customer
+{
+	
+admin_window open_win;
+hide();
+Gtk::Main::run(open_win);
+}
+
+edit_eventt::~edit_eventt()
+{}
+
+change_people::change_people()
+:box(Gtk::ORIENTATION_VERTICAL),
+send("Send")
+{
+	set_size_request(350,200);
+	set_title("Edit");
+	add(box);
+
+	
+
+    label.set_text("Enter the new # people: ");
+    box.pack_start(label);
+    box.pack_start(input);
+    box.pack_start(textbox);
+
+	
+
+
+	
+	send.signal_clicked().connect(sigc::mem_fun(*this,&change_people::send_val));
+		box.pack_start(send);
+
+	show_all_children();
+}
+change_people::~change_people()
+{} 
+
+void change_people::send_val() // A function to open a file on the Customer's name to enter their event details
+{
+    std::string	new_num_people = input.get_text(); 
+	
+	std::string file_name;
+	std::string temp;
+	std::fstream ifile;
+	ifile.open("edit.txt");
+	ifile>>file_name;
+	ifile.close();
+	std::vector<std::string> data;
+	
+	std::fstream ofile;
+	ofile.open(file_name,ios::out | ios::app);
+
+	while(!ofile.eof()){
+    getline(ofile,temp);
+	data.push_back(temp);
+	}
+	data[2] = "People: " + new_num_people;
+	ofile.close();	
+
+	std::fstream tfile;
+	tfile.open(file_name, ios::trunc);
+	for(int i=0; i<data.size();i++){
+		tfile<<data[i]<<std::endl;
+	}
+
+tfile.close();
+}	
+
+
+
+	
+
+
+

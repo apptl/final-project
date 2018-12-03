@@ -10,6 +10,21 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "algorithm": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "deque": "cpp",
+        "__bit_reference": "cpp",
+        "__functional_base": "cpp",
+        "atomic": "cpp",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "limits": "cpp",
+        "locale": "cpp",
+        "memory": "cpp",
+        "ratio": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "vector": "cpp"
     }
 }
