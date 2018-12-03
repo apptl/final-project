@@ -101,11 +101,69 @@ admin_things::~admin_things()
 
 	}
 
+sort_package::sort_package()
+{
+	set_size_request(350,200);
+	set_title("Sort");
+	add(box);
+std::vector<std::string> prices;
+	prices.push_back("8,000.00");
+	prices.push_back("10,000.00");
+	prices.push_back("15,000.00");
+	prices.push_back("27,000.00");
+	prices.push_back("60,000.00");
+
+	std::vector <std::string> names;
+
+	names.push_back("simple package");
+	names.push_back("renew vows package");	
+    	names.push_back("Birthday Party(all included)");
+	names.push_back("Wedding pacakge");
+	names.push_back("Wedding(all included including alcohol :)");
+    
+    std::string one;
+	std::string two;
+	std::string three;
+	std::string four;
+	std::string five;
+
+	one = names[0] + ":  " +prices[0];
+    two = names[1] + ":  " +prices[1];
+	three = names[2] + ":  " +prices[2];
+	four = names[3] + ":  " +prices[3];
+	five = names[4] + ":  " +prices[4];			
+
+    label1.set_text(one);
+	    box.pack_start(label1);
+
+	label2.set_text(two);
+		box.pack_start(label2);
+
+	label3.set_text(three);
+		box.pack_start(label3);
+
+	label4.set_text(four);
+		box.pack_start(label4);
+
+	label5.set_text(five);
+		box.pack_start(label5);
+
+	show_all_children();
+}
+
+sort_package::~sort_package()
+{}
 
 void admin_things::Sorting()
 {
-		
+	sort_package Sort;
+	//hide();
+	Gtk::Main::run(Sort);
 }
+
+
+
+
 void admin_things::Editing()
 {
 edit_eventt new_win_admin;
@@ -1421,7 +1479,57 @@ tfile.close();
 }	
 
 
+change_date::change_date()
+:box(Gtk::ORIENTATION_VERTICAL),
+send("Send")
+{
+	set_size_request(350,200);
+	set_title("Edit");
+	add(box);
 
+    label.set_text("Enter the new date: ");
+    box.pack_start(label);
+    box.pack_start(input);
+    box.pack_start(textbox);
+
+	send.signal_clicked().connect(sigc::mem_fun(*this,&change_date::send_val));
+		box.pack_start(send);
+
+	show_all_children();
+}
+change_date::~change_date()
+{} 
+
+void change_date::send_val() // A function to open a file on the Customer's name to enter their event details
+{
+    std::string	new_num_people = input.get_text(); 
+	
+	std::string file_name;
+	std::string temp;
+	std::fstream ifile;
+	ifile.open("edit.txt");
+	ifile>>file_name;
+	ifile.close();
+	std::vector<std::string> data;
+	
+	std::fstream ofile;
+	ofile.open(file_name,ios::out | ios::app);
+
+	while(!ofile.eof()){
+    getline(ofile,temp);
+	data.push_back(temp);
+	}
+	data[3] = "Date: " + new_num_people;
+	ofile.close();	
+
+	std::fstream tfile;
+	tfile.open(file_name, ios::trunc);
+	for(int i=0; i<data.size();i++){
+		tfile<<data[i]<<std::endl;
+	}
+
+tfile.close();
+}
 	
 
 

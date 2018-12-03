@@ -71,6 +71,8 @@ admin_things();
 virtual ~admin_things();
 };
 
+
+
 class admin_window:public Gtk::Window //A Class for the Admin to edit and sort events
 {
 public:
@@ -318,5 +320,18 @@ public:
     virtual ~change_date();
     void send_val();
 };
+
+class sort_package:public Gtk::Window
+{
+
+public:
+    Gtk::Label label1,label2,label3,label4,label5;
+    Gtk::VBox box;
+    Gtk::Button click;
+    sort_package();
+    virtual ~sort_package();
+
+};
+
 
 #endif
