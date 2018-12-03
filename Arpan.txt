@@ -1,3 +1,0 @@
-Event: Wedding
-Food Package: foodpackage2
-Cost: $0
